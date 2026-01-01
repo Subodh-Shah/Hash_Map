@@ -31,26 +31,29 @@ class HashMap {
 	
 	get(key) {
 		let hashCode = this.hash(key);
-		let entry =  this.buckets[hashCode].find(item => item[0] === key)
+		let entry =  this.buckets[hashCode].find(item => item[0] === key);
 		if(entry) {
-			return this.buckets[hashCode][1];
+			return entry[1];
 		}
 		return undefined;
 	}
 	
+	// Modifying this function currently
 	remove(key) {
 		let hashCode = this.hash(key);
-		if(this.buckets[hashCode].includes([key, value])) 
+		let entry = this.buckets[hashCode].find(item => item[0] === key);
+		if(entry) 
 		{
-			this.buckets.splice(hashCode, 1);
+			this.buckets[hashCode].splice(this.buckets, 1);
 			return true;
 		}
 		return false;
 	}
 	
 	has(key){
-		let hashCode = hash(key);
-		if (this.buckets.contains(hashCode)) {
+		let hashCode = this.hash(key);
+		let entry = this.buckets[hashCode].find(item => item[0] ===key)
+		if (entry) {
 			return true;
 		}
 		return false;
