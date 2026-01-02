@@ -37,14 +37,14 @@ class HashMap {
 		}
 		return undefined;
 	}
-	
 	// Modifying this function currently
 	remove(key) {
 		let hashCode = this.hash(key);
-		let entry = this.buckets[hashCode].find(item => item[0] === key);
-		if(entry) 
-		{
-			this.buckets[hashCode].splice(this.buckets, 1);
+		let bucket = this.bucket[hashCode];
+		if(!bucket) return false;
+		let entryIndex = bucket.findIndex(item => item[0] === key);
+		if(entryIndex !== -1) {
+			bucket.splice(entryIndex, 1);
 			return true;
 		}
 		return false;
