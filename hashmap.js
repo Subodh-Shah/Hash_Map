@@ -8,7 +8,7 @@ class HashMap {
 	hash(key){
 		let hashCode = 0;
 		const primeNumber = 31;
-		for (let i = 0; i < key.length(); i++){
+		for (let i = 0; i < key.length; i++){
 			hashCode = (hashCode*primeNumber + key.charCodeAt(i)) % this.capacity;
 		}
 		return hashCode;
@@ -25,7 +25,7 @@ class HashMap {
 		if(entry) {
 			entry[1] = value;
 		} else {
-			this.buckets[hashCode] = [key, value];
+			this.buckets[hashCode].push([key, value]);
 		}
 	}
 	
@@ -37,10 +37,10 @@ class HashMap {
 		}
 		return undefined;
 	}
-	// Modifying this function currently
+	
 	remove(key) {
 		let hashCode = this.hash(key);
-		let bucket = this.bucket[hashCode];
+		let bucket = this.buckets[hashCode];
 		if(!bucket) return false;
 		let entryIndex = bucket.findIndex(item => item[0] === key);
 		if(entryIndex !== -1) {
@@ -50,9 +50,12 @@ class HashMap {
 		return false;
 	}
 	
+	
 	has(key){
 		let hashCode = this.hash(key);
-		let entry = this.buckets[hashCode].find(item => item[0] ===key)
+		let bucket =  this.buckets[hashCode];
+		if (!bucket) return false;
+		let entry = bucket.find(item => item[0] ===key);
 		if (entry) {
 			return true;
 		}
@@ -61,54 +64,75 @@ class HashMap {
 	
 	keys(){
 		let keysArray = [];
-		for (let entry in this.buckets) {
-			keysArray.push(entry[0]);
+		for (let bucket of this.buckets) {
+			if (!bucket) continue;
+			
+			for (let entry of bucket){
+				keysArray.push(entry[0]);
+			}
 		}
 		return keysArray;
 	}
 	
 	values() {
 		let valuesArray = [];
-		for (let entry in this.buckets) {
-			valuesArray.push(entry[1]);
+		for (let bucket of this.buckets) {
+			if (!bucket) continue;
+			for (let entry of bucket) {
+				valuesArray.push(entry[1]);
+			}
 		}
 		return valuesArray;
 	}
 	
 	entries () {
 		let entriesArray = [];
-		for (let entry in this.buckets) {
-			entriesArray.push([entry[0], entry[1]]);
+		for (let bucket of this.buckets) {
+			if(!bucket) continue;
+			for (let entry of bucket) {
+				entriesArray.push([entry[0], entry[1]]);
+			}
 		}
 		return entriesArray;
 	}
 	
+	hashes() {
+		let hashesArray = [];
+		for (let bucket of this.buckets) {
+			if(!bucket) continue;
+			for (let entry of bucket) {
+				hashesArray.push(this.hash(entry[0]));
+			}
+		}
+		return hashesArray;
+	}
+	
 	size () {
-		const counter = 0;
-		for (let entry in this.buckets) {
-			counter++;
+		let counter = 0;
+		for (let bucket of this.buckets) {
+			if(!bucket) continue;
+			 counter = counter + bucket.length;
 		}
 		return counter;
 	}
 	
+
 	clear() {
-		for (let entry in this.buckets) {
-			let hashCode = this.hash(entry[0]);
-			this.buckets[hashCode] = [];
-		}
+		this.buckets = Array(this.capacity);
 	}
 }
 
 function mainFunction()  {
 	let newHashMap = new HashMap();
 	console.log("This is working properly");
-	newHashMap.set();
-	newHashMap.set();
-	newHashMap.set();
-	console.log(newHashMap.hashMap);
+	newHashMap.set('Subodh Shah', 20 );
+	newHashMap.set('Denish Chaudhary', 22 );
+	newHashMap.set('Mahadev Bhatta', 22 );
+	console.log(newHashMap.buckets);
 	
 	let keys = newHashMap.keys();
 	console.log(keys);
+	console.log(newHashMap.hashes());
 }
 
 mainFunction();
